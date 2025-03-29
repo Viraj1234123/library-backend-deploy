@@ -12,6 +12,11 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 
+# Patch pdf-poppler to bypass platform check
+RUN if [ -f "node_modules/pdf-poppler/index.js" ]; then \
+      sed -i 's/linux is NOT supported/\/\/ Bypassed platform check/g' node_modules/pdf-poppler/index.js; \
+    fi
+
 # Copy the rest of the application
 COPY . .
 
